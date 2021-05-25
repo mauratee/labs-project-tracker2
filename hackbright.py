@@ -57,12 +57,32 @@ def make_new_student(first_name, last_name, github):
 
 def get_project_by_title(title):
     """Given a project title, print information about the project."""
-    pass
+    QUERY = """
+        SELECT title, description, max_grade
+        FROM projects
+        WHERE title = :title
+        """
+    db_cursor = db.session.execute(QUERY, {'title' : title})
+
+    row = db_cursor.fetchone()
+
+    print(f"Project title: {row[0]}, Description: {row[1]}, Max grade: {row[2]}")
 
 
 def get_grade_by_github_title(github, title):
     """Print grade student received for a project."""
-    pass
+    
+    QUERY = """
+        SELECT grade, student_github, project_title
+        FROM grades
+        WHERE project_title = :title AND student_github = :github 
+        """
+    db_cursor = db.session.execute(QUERY, {'title' : title,
+                                            'github' : github})
+        
+    row = db_cursor.fetchone()
+
+    print(f"Project grade: {row[0]}, Project title: {row[2]}, Student Github: {row[1]}")
 
 
 def assign_grade(github, title, grade):
